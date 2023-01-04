@@ -1,4 +1,3 @@
-import { map } from "@trpc/server/observable";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -39,4 +38,4 @@ const BuildsPage: NextPage = () => {
   );
 };
 
-export default Home;
+export default BuildsPage;

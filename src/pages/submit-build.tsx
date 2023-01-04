@@ -5,7 +5,7 @@ import Head from "next/head";
 import { api } from "../utils/api";
 import { useState } from "react";
 
-const Home: NextPage = () => {
+const SubmitBuildPage: NextPage = () => {
   const createBuildMutation = api.builds.createBuild.useMutation()
   
   const [build, setOrder] = useState("")
@@ -67,4 +67,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default SubmitBuildPage;

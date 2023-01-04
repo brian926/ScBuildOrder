@@ -1,13 +1,9 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-
-// Using API instead of the standard TRPC naming
-import { api } from "../utils/api";
 import React from "react";
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
 
   return (
     <>
@@ -26,4 +22,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default HomePage;
