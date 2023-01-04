@@ -1,3 +1,4 @@
+import { contextProps } from "@trpc/react-query/dist/internals/context";
 import { z } from "zod";
 
 import { router, publicProcedure } from "../trpc";
@@ -14,4 +15,9 @@ export const buildsRouter = router({
 
       return build
   }),
+
+  getBuilds: publicProcedure.query(async ({ ctx }) => {
+      const builds = await ctx.prisma.buildOrder.findMany()
+      return builds
+    })
 });

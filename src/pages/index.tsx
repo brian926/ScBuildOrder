@@ -5,17 +5,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 // Using API instead of the standard TRPC naming
 import { api } from "../utils/api";
-import React, { useState } from "react";
+import React from "react";
 
 const Home: NextPage = () => {
-  const createBuildMutation = api.builds.createBuild.useMutation()
-  
-  const [buildOrder, setOrder] = useState("")
-  const [matchUp, setMatchUp] = useState("")
-
-  function handleSubmitBuildOrder(e: React.FormEvent) {
-    e.preventDefault()
-  }
 
   return (
     <>
@@ -25,39 +17,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex gap-6 min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <h1>Submit a Build Order</h1>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmitBuildOrder}>
-          <label htmlFor="match-up-select">Match Up</label>
+        <h1>Weclome to SC2 Build Order Manager</h1>
 
-          <select 
-            value={matchUp} 
-            onChange={e => setMatchUp(e.target.value)} 
-            className="text-black" 
-            id="match-up-select" 
-            required
-          >
-            <option value="zvt">ZvT</option>
-            <option value="zvp">ZvP</option>
-            <option value="zvz">ZvZ</option>
-
-            <option value="pvt">PvT</option>
-            <option value="pvp">PvP</option>
-            <option value="pvz">PvZ</option>
-
-            <option value="tvt">TvT</option>
-            <option value="tvp">TvP</option>
-            <option value="tvz">TvZ</option>
-          </select>
-
-          <textarea 
-            required
-            className="p-2 text-black"
-            value={buildOrder}
-            onChange={(e) => setOrder(e.target.value)}
-          />
-          
-          <button className="p-2 bg-white text-black">Submit</button>
-        </form>
+        <Link href="/submit-build">Submit a new Build</Link>
+        <Link href="/builds">View Builds</Link>
       </main>
     </>
   );
