@@ -1,2 +1,4 @@
 - as a user, I shall be able to upload a sc2 build order text snippit
+    - show an error if build order input is empty
+    - show an error if the match up is not selected
 - as a user, I should be able to view build orders based on match up
