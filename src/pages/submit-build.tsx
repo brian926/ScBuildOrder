@@ -2,11 +2,12 @@ import { type NextPage } from "next";
 import Head from "next/head";
 
 // Using API instead of the standard TRPC naming
-import { api } from "../utils/api";
+import { trpc } from "../utils/trpc";
 import { useState } from "react";
+import { useRouter } from "next/router"
 
 const SubmitBuildPage: NextPage = () => {
-  const createBuildMutation = api.builds.createBuild.useMutation()
+  const createBuildMutation = trpc.builds.createBuild.useMutation()
   
   const [build, setOrder] = useState("")
   const [matchUp, setMatchUp] = useState("ZvT")
@@ -18,7 +19,7 @@ const SubmitBuildPage: NextPage = () => {
       matchUp,
       build
     })
-    router.push("/builds")
+    router.push("/")
   }
 
   return (
@@ -35,7 +36,7 @@ const SubmitBuildPage: NextPage = () => {
 
           <select 
             value={matchUp} 
-            onChange={e => setMatchUp(e.target.value)} 
+            onChange={(e) => setMatchUp(e.target.value)} 
             className="text-black" 
             id="match-up-select" 
             required

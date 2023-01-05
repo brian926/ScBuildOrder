@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
+import { trpc } from "../utils/trpc";
 
 const BuildsPage: NextPage = () => {
 
@@ -21,12 +22,18 @@ const BuildsPage: NextPage = () => {
         <Link href="/">Home</Link>
 
         <table>
-            <thead></thead>
+          <thead>
+              <tr>
+                <th>Id</th>
+                <th>Match Up</th>
+                <th>Build</th>
+              </tr>
+            </thead>
             <tbody>
                 {builds.data?.map((build) => (
                     <tr key={build.id}>
                         <td>{build.id}</td>
-                        <td>{build.matchup}</td>
+                        <td>{build.matchUp}</td>
                         <td>{build.build}</td>
                     </tr>
                 ))}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 const HomePage: NextPage = () => {
-
+  
   return (
     <>
       <Head>
