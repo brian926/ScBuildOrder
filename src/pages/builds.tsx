@@ -16,7 +16,7 @@ const BuildsPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex gap-6 min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <main className="flex gap-6 min-h-screen flex-col items-center justify-center text-black dark:bg-gray-800 dark:text-white">
         <h1>Builds</h1>
 
         <Link href="/">Home</Link>
