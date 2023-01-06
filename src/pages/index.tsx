@@ -15,8 +15,8 @@ const HomePage: NextPage = () => {
       <main className="flex gap-6 min-h-screen flex-col items-center justify-center text-black dark:bg-gray-800 dark:text-white">
         <h1>Weclome to SC2 Build Order Manager</h1>
 
-        <Link href="/submit-build">Submit a new Build</Link>
-        <Link href="/builds">View Builds</Link>
+        <Link className="link" href="/submit-build">Submit a new Build</Link>
+        <Link className="link" href="/races">View Builds</Link>
       </main>
     </>
   );
