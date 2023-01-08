@@ -2,6 +2,8 @@ import type { BuildOrder } from "@prisma/client";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router"
+import { useEffect } from "react";
+import { router } from "../../../../../server/trpc/trpc";
 import { trpc } from "../../../../../utils/trpc"
 
 function BuildCard({ build }: { build: BuildOrder }) {
@@ -37,9 +39,9 @@ function BuildCard({ build }: { build: BuildOrder }) {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
       </a>
@@ -48,14 +50,24 @@ function BuildCard({ build }: { build: BuildOrder }) {
 }
 
 const FindBuilds: NextPage = () => {
-    const { opponentRace, raceName } = useRouter().query as { 
+    const router = useRouter()
+
+    const { opponentRace = "", raceName = "" } = useRouter().query as { 
       opponentRace: string
       raceName: string 
     };
 
     const builds = trpc.builds.getBuildsByMatchUp.useQuery({
       matchUp: `${raceName.toLowerCase().charAt(0)}v${opponentRace.toLowerCase().charAt(0)}`,
+    },
+    {
+      enabled: false,
     })
+
+    useEffect(() => {
+      if (!router.isReady) return;
+      builds.refetch()
+    }, [router.isReady, builds])
 
     return (
       <>
@@ -65,8 +77,10 @@ const FindBuilds: NextPage = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
   
-        <main className="flex min-h-screen flex-col items-center justify-center gap-8 px-4 text-black dark:bg-gray-800 dark:text-white">
-          {raceName} vs {opponentRace}
+        <main className="container m-auto bg-gray-800 flex flex-col gap-12 pt-12">
+          <h1 className="text-white text-4xl">
+            {raceName} vs {opponentRace}
+          </h1>
 
           <section className="grid grid-cols-3 gap-4">
             {builds.data?.map((build) => (
