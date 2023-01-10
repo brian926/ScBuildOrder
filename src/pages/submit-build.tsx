@@ -5,6 +5,7 @@ import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import { useState } from "react";
 import { useRouter } from "next/router"
+import { buildTypes } from "./races/[raceName]/match-ups/[opponentRace]";
 
 const SubmitBuildPage: NextPage = () => {
   const createBuildMutation = trpc.builds.createBuild.useMutation()
@@ -12,7 +13,7 @@ const SubmitBuildPage: NextPage = () => {
   const [build, setOrder] = useState("")
   const [matchUp, setMatchUp] = useState("zvt")
   const router = useRouter()
-  const [style, setStyle] = useState("cheese")
+  const [style, setStyle] = useState("Macro")
   const [author, setAuthor] = useState("")
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -79,10 +80,11 @@ const SubmitBuildPage: NextPage = () => {
                 id="style"
                 required
               >
-                <option value="cheese">Cheese</option>
-                <option value="all in">All In</option>
-                <option value="macro">Macro</option>
-                <option value="timing attack">Timing Attack</option>
+                {buildTypes.map((buildType) => (
+                  <option key={buildType} value={buildType}>
+                    {buildType}
+                  </option>
+                ))}
               </select>
             </fieldset>
           </div>

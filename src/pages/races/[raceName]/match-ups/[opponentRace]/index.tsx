@@ -5,6 +5,10 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import { trpc } from "../../../../../utils/trpc"
 import { Badge, Variant } from "../../../../../components/Badge";
+import Link from "next/link";
+import { Form } from "../../../../../components/Form";
+import { Input } from "../../../../../components/Input";
+import { Label } from "../../../../../components/Label";
 
 // export const macroBuildType = "macro";
 // export const timingBuildType = "timing attack";
@@ -12,19 +16,19 @@ import { Badge, Variant } from "../../../../../components/Badge";
 // export const cheeseBuildType = "cheese";
 
 export const buildTypes = [
-  "macro",
-  "timing attack",
-  "all in",
-  "cheese",
+  "Macro",
+  "Timing Attack",
+  "All In",
+  "Cheese",
 ]
 
 function BuildCard({ build }: { build: BuildOrder }) {
   const badgeVariant =
     {
-      ["macro"]: Variant.yellow,
-      ["timing attack"]: Variant.red,
-      ["all in"]: Variant.blue,
-      ["cheese"]: Variant.green,
+      ["Macro"]: Variant.yellow,
+      ["Timing Attack"]: Variant.red,
+      ["All In"]: Variant.blue,
+      ["Cheese"]: Variant.green,
     }[build.style] ?? Variant.green;
 
   return (
@@ -44,8 +48,8 @@ function BuildCard({ build }: { build: BuildOrder }) {
       <p className="mb-3 flex gap-2 font-normal text-gray-700 dark:text-gray-400">
         Created by {" " + build.author}
       </p>
-      <a
-        href="#"
+      <Link
+        href={`/builds/${build.id}`}
         className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         View Build
@@ -62,13 +66,14 @@ function BuildCard({ build }: { build: BuildOrder }) {
             clipRule="evenodd"
           ></path>
         </svg>
-      </a>
+      </Link>
     </div>
   );
 }
 
 const FindBuilds: NextPage = () => {
     const [selectedBuildType, setSelectedBuildType] = useState(buildTypes[0])
+    const [search, setSearch] = useState("")
     const router = useRouter()
 
     const { opponentRace = "", raceName = "" } = useRouter().query as { 
@@ -105,37 +110,50 @@ const FindBuilds: NextPage = () => {
             {raceName} vs {opponentRace}
           </h1>
 
-          <fieldset>
-            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-              Build Type
-            </label>
-            <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
-              {buildTypes.map((buildType) => (
-                <li
-                  key={buildType}
-                  className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r"
-                >
-                  <div className="flex items-center pl-3">
-                    <input
-                      id={`build-radio-${buildType}`}
-                      type="radio"
-                      value={buildType}
-                      name="list-radio"
-                      checked={buildType === selectedBuildType}
-                      className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600"
-                      onChange={(e) => setSelectedBuildType(e.target.value)}
-                    />
-                    <label
-                      htmlFor={`build-radio-${buildType}`}
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      {buildType}
-                    </label>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </fieldset>
+          <Form>
+            <fieldset>
+              <Label htmlFor="search">
+                Filter (by name, author, or description)
+              </Label>
+              <Input
+                id="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </fieldset>
+            
+            <fieldset>
+              <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                Build Type
+              </label>
+              <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
+                {buildTypes.map((buildType) => (
+                  <li
+                    key={buildType}
+                    className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r"
+                  >
+                    <div className="flex items-center pl-3">
+                      <input
+                        id={`build-radio-${buildType}`}
+                        type="radio"
+                        value={buildType}
+                        name="list-radio"
+                        checked={buildType === selectedBuildType}
+                        className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600"
+                        onChange={(e) => setSelectedBuildType(e.target.value)}
+                      />
+                      <label
+                        htmlFor={`build-radio-${buildType}`}
+                        className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      >
+                        {buildType}
+                      </label>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </fieldset>
+          </Form>
 
           <section className="grid grid-cols-3 gap-4">
             {filteredBuilds?.map((build) => (
