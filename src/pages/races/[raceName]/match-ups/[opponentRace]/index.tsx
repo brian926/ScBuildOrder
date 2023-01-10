@@ -2,11 +2,31 @@ import type { BuildOrder } from "@prisma/client";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router"
-import { useEffect } from "react";
-import { router } from "../../../../../server/trpc/trpc";
+import { useEffect, useState } from "react";
 import { trpc } from "../../../../../utils/trpc"
+import { Badge, Variant } from "../../../../../components/Badge";
+
+// export const macroBuildType = "macro";
+// export const timingBuildType = "timing attack";
+// export const allInBuildType = "all in";
+// export const cheeseBuildType = "cheese";
+
+export const buildTypes = [
+  "macro",
+  "timing attack",
+  "all in",
+  "cheese",
+]
 
 function BuildCard({ build }: { build: BuildOrder }) {
+  const badgeVariant =
+    {
+      ["macro"]: Variant.yellow,
+      ["timing attack"]: Variant.red,
+      ["all in"]: Variant.blue,
+      ["cheese"]: Variant.green,
+    }[build.style] ?? Variant.green;
+
   return (
     <div className="max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-800">
       <a href="#">
@@ -19,9 +39,7 @@ function BuildCard({ build }: { build: BuildOrder }) {
       </p>
       <p className="mb-3 flex gap-2 font-normal text-gray-700 dark:text-gray-400">
         <b>Style</b>
-        <span className="mr-2 rounded bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-200 dark:text-red-900">
-          {build.style}
-        </span>
+        <Badge text={build.style} variant={badgeVariant} />
       </p>
       <p className="mb-3 flex gap-2 font-normal text-gray-700 dark:text-gray-400">
         Created by {" " + build.author}
@@ -50,6 +68,7 @@ function BuildCard({ build }: { build: BuildOrder }) {
 }
 
 const FindBuilds: NextPage = () => {
+    const [selectedBuildType, setSelectedBuildType] = useState(buildTypes[0])
     const router = useRouter()
 
     const { opponentRace = "", raceName = "" } = useRouter().query as { 
@@ -69,6 +88,10 @@ const FindBuilds: NextPage = () => {
       builds.refetch()
     }, [router.isReady, builds])
 
+    const filteredBuilds = (builds.data ?? []).filter(
+      (build) => build.style == selectedBuildType
+    )
+
     return (
       <>
         <Head>
@@ -82,8 +105,40 @@ const FindBuilds: NextPage = () => {
             {raceName} vs {opponentRace}
           </h1>
 
+          <fieldset>
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+              Build Type
+            </label>
+            <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
+              {buildTypes.map((buildType) => (
+                <li
+                  key={buildType}
+                  className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r"
+                >
+                  <div className="flex items-center pl-3">
+                    <input
+                      id={`build-radio-${buildType}`}
+                      type="radio"
+                      value={buildType}
+                      name="list-radio"
+                      checked={buildType === selectedBuildType}
+                      className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600"
+                      onChange={(e) => setSelectedBuildType(e.target.value)}
+                    />
+                    <label
+                      htmlFor={`build-radio-${buildType}`}
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      {buildType}
+                    </label>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </fieldset>
+
           <section className="grid grid-cols-3 gap-4">
-            {builds.data?.map((build) => (
+            {filteredBuilds?.map((build) => (
               <BuildCard key={build.id} build={build} />
             ))}
           </section>
