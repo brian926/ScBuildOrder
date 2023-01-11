@@ -93,9 +93,19 @@ const FindBuilds: NextPage = () => {
       builds.refetch()
     }, [router.isReady, builds])
 
-    const filteredBuilds = (builds.data ?? []).filter(
-      (build) => build.style == selectedBuildType
-    )
+    const lowerCaseSearch = search.toLocaleLowerCase()
+
+    const filteredBuilds = (builds.data ?? [])
+    .filter((build) => build.style == selectedBuildType)
+      .filter((build) => 
+        lowerCaseSearch != "" 
+         ? ["author", "title", "description"].some((key) =>
+          ((build as Record<string, string>) [key] ?? "")
+          .toLowerCase()
+          .includes(lowerCaseSearch)
+         )
+         : true
+    );
 
     return (
       <>
@@ -105,12 +115,12 @@ const FindBuilds: NextPage = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
   
-        <main className="container m-auto bg-gray-800 flex flex-col gap-12 pt-12">
+        <main className="container m-auto bg-gray-800 flex flex-col gap-8 pt-12">
           <h1 className="text-white text-4xl">
             {raceName} vs {opponentRace}
           </h1>
 
-          <Form>
+          <Form className="w-1/3">
             <fieldset>
               <Label htmlFor="search">
                 Filter (by name, author, or description)
@@ -155,10 +165,13 @@ const FindBuilds: NextPage = () => {
             </fieldset>
           </Form>
 
-          <section className="grid grid-cols-3 gap-4">
-            {filteredBuilds?.map((build) => (
-              <BuildCard key={build.id} build={build} />
-            ))}
+          <section className="flex flex-col gap-4">
+            <h2 className="text-2xl text-white">Matching Builds</h2>
+            <section className="grid grid-cols-3 gap-4">
+              {filteredBuilds?.map((build) => (
+                <BuildCard key={build.id} build={build} />
+              ))}
+            </section>
           </section>
           
         </main>
