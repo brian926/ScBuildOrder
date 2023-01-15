@@ -1,28 +1,55 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 
 export const RaceCard = ({
-  raceImageSrc,
+  matchUp,
   raceName,
   href,
   isOpponent = false,
 }: {
-  raceImageSrc: string;
   raceName: string;
   href: string;
+  matchUp: string;
   isOpponent?: boolean;
 }) => {
   const buttonStyle = isOpponent
     ? `bg-red-700 hover:bg-red-800`
     : `bg-blue-700 hover:bg-blue-800`;
 
+const raceImageMap: Record<string, string> = {
+  z: "/zerg.jpeg",
+  p: "/protoss.jpeg",
+  t: "/terran.jpeg",
+};
+
+const [yourRaceLetter, opponentRaceLetter] = matchUp.split("v") as [
+  string,
+  string
+];
+const yourRaceImage = raceImageMap[yourRaceLetter]!;
+const opponentRaceImage = raceImageMap[opponentRaceLetter]!;
+
   return (
-    <div className="max-w-sm rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
-      <a href="#">
-        <img className="rounded-t-lg" src={raceImageSrc} alt={raceName} />
-      </a>
-      <div className="p-5">
+    <div className="relative max-w-sm rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+      <div className="flex items-center justify-between gap-2">
+        <Image
+          className="rounded-t-lg"
+          src={yourRaceImage}
+          alt={raceName}
+          width="100"
+          height="100"
+        />
+        <Image
+          className="rounded-t-lg"
+          src={opponentRaceImage}
+          alt={raceName}
+          width="100"
+          height="100"
+        />
+      </div>
+      <div className="flex justify-center p-5">
         <Link
           href={href}
           className={
@@ -50,6 +77,54 @@ export const RaceCard = ({
   );
 };
 
+const matchUps = [
+  {
+    yourRace: "Zerg",
+    opponentRace: "Terran",
+    matchup: "zvt",
+  },
+  {
+    yourRace: "Protoss",
+    opponentRace: "Terran",
+    matchup: "pvt",
+  },
+  {
+    yourRace: "Terran",
+    opponentRace: "Terran",
+    matchup: "tvt",
+  },
+  {
+    yourRace: "Zerg",
+    opponentRace: "Protoss",
+    matchup: "zvp",
+  },
+  {
+    yourRace: "Protoss",
+    opponentRace: "Protoss",
+    matchup: "pvp",
+  },
+  {
+    yourRace: "Terran",
+    opponentRace: "Protoss",
+    matchup: "tvp",
+  },
+  {
+    yourRace: "Zerg",
+    opponentRace: "Zerg",
+    matchup: "zvz",
+  },
+  {
+    yourRace: "Protoss",
+    opponentRace: "Zerg",
+    matchup: "pvz",
+  },
+  {
+    yourRace: "Terran",
+    opponentRace: "Zerg",
+    matchup: "tvz",
+  },
+];
+
 const FindBuilds: NextPage = () => {
   return (
     <>
@@ -59,31 +134,19 @@ const FindBuilds: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex min-h-screen flex-col items-center justify-center gap-8 text-black dark:bg-gray-800 dark:text-white">
-        <h1>Select your Race</h1>
+      <main className="flex min-h-screen flex-col items-center justify-center gap-8 pt-12 text-black dark:bg-gray-800 dark:text-white">
+        <h1>Select a Match Up</h1>
 
-        <ul className="grid grid-cols-3 gap-4">
-          <li>
-            <RaceCard
-              href={`/races/zerg/match-ups`}
-              raceImageSrc={"/zerg.jpeg"}
-              raceName="Zerg"
-            />
-          </li>
-          <li>
-            <RaceCard
-              href={`/races/protoss/match-ups`}
-              raceImageSrc={"/protoss.jpeg"}
-              raceName="Protoss"
-            />
-          </li>
-          <li>
-            <RaceCard
-              href={`/races/terran/match-ups`}
-              raceImageSrc={"/terran.jpeg"}
-              raceName="Terran"
-            />
-          </li>
+        <ul className="grid grid-cols-3 gap-8">
+          {matchUps.map((matchUp) => (
+              <li key={matchUp.matchup}>
+                <RaceCard
+                  matchUp={matchUp.matchup}
+                  href={`/races/${matchUp.yourRace.toLowerCase()}/match-ups/${matchUp.opponentRace.toLowerCase()}`}
+                  raceName={`${matchUp.yourRace} vs ${matchUp.opponentRace}`}
+                />
+              </li>
+            ))}
         </ul>
       </main>
     </>
