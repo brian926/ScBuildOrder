@@ -1,4 +1,12 @@
-- as a user, I shall be able to upload a sc2 build order text snippit
-    - show an error if build order input is empty
-    - show an error if the match up is not selected
-- as a user, I should be able to view build orders
+# User Stories
+
+- as a user, I shall be able to url bookmark a search scenario
+- a user shall be able to sort build orders by authors or title
+- a user shall be able to upvote builds
+- a user shall be able to comment on builds
+- a user shall be able to favorite a build
+
+# Misc
+- bring in flowbite for some better styles
+
+# Bugs
