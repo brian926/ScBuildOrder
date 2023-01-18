@@ -10,17 +10,14 @@ import { Form } from "../../../../../components/Form";
 import { Input } from "../../../../../components/Input";
 import { Label } from "../../../../../components/Label";
 
-// export const macroBuildType = "macro";
-// export const timingBuildType = "timing attack";
-// export const allInBuildType = "all in";
-// export const cheeseBuildType = "cheese";
-
 export const buildTypes = [
   "Macro",
   "Timing Attack",
   "All In",
   "Cheese",
 ]
+
+const All_BUILD_TYPE = 'All';
 
 function BuildCard({ build }: { build: BuildOrder }) {
   const badgeVariant =
@@ -72,7 +69,7 @@ function BuildCard({ build }: { build: BuildOrder }) {
 }
 
 const FindBuilds: NextPage = () => {
-    const [selectedBuildType, setSelectedBuildType] = useState(buildTypes[0])
+    const [selectedBuildType, setSelectedBuildType] = useState(All_BUILD_TYPE)
     const [search, setSearch] = useState("")
     const router = useRouter()
 
@@ -96,7 +93,7 @@ const FindBuilds: NextPage = () => {
     const lowerCaseSearch = search.toLocaleLowerCase()
 
     const filteredBuilds = (builds.data ?? [])
-    .filter((build) => selectedBuildType === "all"  ? true : build.style == selectedBuildType)
+    .filter((build) => selectedBuildType === All_BUILD_TYPE  ? true : build.style == selectedBuildType)
       .filter((build) => 
         lowerCaseSearch != "" 
          ? ["author", "title", "description"].some((key) =>
@@ -137,7 +134,7 @@ const FindBuilds: NextPage = () => {
                   Build Type
                 </label>
                 <ul className="items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                  {buildTypes.map((buildType) => (
+                  {[All_BUILD_TYPE, ...buildTypes].map((buildType) => (
                     <li
                       key={buildType}
                       className="border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r"
