@@ -17,6 +17,8 @@ export const buildTypes = [
   "Cheese",
 ]
 
+type EditableBuildOrderFields = Pick<BuildOrder, 'description' | 'title' | 'author'>
+
 const All_BUILD_TYPE = 'All';
 
 function BuildCard({ build }: { build: BuildOrder }) {
@@ -96,11 +98,12 @@ const FindBuilds: NextPage = () => {
     .filter((build) => selectedBuildType === All_BUILD_TYPE  ? true : build.style == selectedBuildType)
       .filter((build) => 
         lowerCaseSearch != "" 
-         ? ["author", "title", "description"].some((key) =>
-          ((build as Record<string, string>) [key] ?? "")
+         ? ["author", "title", "description"].some((key) => {
+          const subBuild = build as EditableBuildOrderFields;
+          return (subBuild[key as keyof EditableBuildOrderFields] ?? "")
           .toLowerCase()
-          .includes(lowerCaseSearch)
-         )
+          .includes(lowerCaseSearch);
+         })
          : true
     );
 
